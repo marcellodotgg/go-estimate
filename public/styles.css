@@ -2,3 +2,39 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --text-default: #222;
+}
+
+html,
+body {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    scroll-behavior: smooth;
+    color: var(--text-default);
+}
+
+body {
+  padding-top: 50px;
+}
+
+body footer {
+   margin-top: auto;
+}
+
+main {
+  padding: 16px 0;
+}
+
+/* Transitions */
+a, button {
+    transition: color 300ms ease-out, background 300ms ease-out; 
+    cursor: pointer;
+}
+
+.btn {
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-weight: 700;
+}

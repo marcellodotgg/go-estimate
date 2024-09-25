@@ -4,8 +4,11 @@ module.exports = {
   theme: {
     extend: {
       borderColor: {
-        DEFAULT: "rgba(0, 0, 0, 0.15)",
+        DEFAULT: "rgba(0, 0, 0, 0.5)",
       },
+      colors: {
+        DEFAULT: "#222",
+      }
     },
     container: {
       center: true,

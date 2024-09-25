@@ -3,14 +3,40 @@
 <html lang="en">
 
 <head>
-    <title>Go Marchy | Estimate</title>
+    <title>Go Estimate</title>
     <meta name="description" content="Estimate - do your best guess" />
     {{ template "layout/head" . }}
 </head>
 
 <body>
     {{ template "layout/nav-bar" . }}
-    <main>This is the main content of the website</main>
+
+    <header id="hero-content" class="flex flex-col items-center justify-center bg-sky-200 w-full min-h-96 border-b">
+        <div class="flex flex-col items-center gap-2 text-center max-w-[400px]">
+            <h1 class="text-4xl font-extrabold text-sky-900">
+                <img width="48" height="48"
+                    src="https://raw.githubusercontent.com/egonelbre/gophers/master/.thumb/animation/gopher-dance-long.gif"
+                    alt="gopher" />
+                Efficient Estimates
+            </h1>
+            <p class="text-lg">
+                Because every other estimate application makes you pay, bombards you with ads, or limits you.
+            </p>
+            <button class="my-2 text-lg w-fit btn bg-sky-700 text-white hover:bg-sky-800">
+                Start a Session
+            </button>
+            <p class="text-black/60 text-sm">
+                You can share the link after you start a session.
+            </p>
+        </div>
+    </header>
+    <main>
+        <div class="container">
+            Created this because every other application was advertisement based, made you pay, or
+            limited you in some way. Maybe will add more features in the future, just wanted something
+            "out the door".
+        </div>
+    </main>
     {{ template "layout/footer" . }} {{ template "layout/scripts" . }}
 </body>
 
