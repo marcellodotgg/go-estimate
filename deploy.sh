@@ -31,7 +31,7 @@ docker build -t estimate .
 docker kill estimate_container
 docker container prune -f
 docker run -d \
-       -p 8082:8080 \
+       -p 8083:8080 \
        -v $(pwd)/estimate.db:/app/estimate.db \
        -v /var/www/html:/var/www/html \
        -e DATABASE_URL=/app/estimate.db \
