@@ -1,0 +1,15 @@
+{{ define "layout/scripts" }}
+<script>
+    htmx.config.scrollBehavior = "smooth";
+</script>
+<script>
+    document.body.addEventListener("htmx:beforeSwap", function (evt) {
+        const responseStatus = evt.detail.xhr.status;
+
+        if ([401, 404, 422].includes(responseStatus)) {
+            evt.detail.shouldSwap = true;
+            evt.detail.isError = false;
+        }
+    });
+</script>
+{{ end }}

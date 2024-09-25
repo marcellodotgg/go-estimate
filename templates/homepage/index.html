@@ -1,0 +1,18 @@
+{{ define "homepage/index" }}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Go Marchy | Estimate</title>
+    <meta name="description" content="Estimate - do your best guess" />
+    {{ template "layout/head" . }}
+</head>
+
+<body>
+    {{ template "layout/nav-bar" . }}
+    <main>This is the main content of the website</main>
+    {{ template "layout/footer" . }} {{ template "layout/scripts" . }}
+</body>
+
+</html>
+{{ end }}
