@@ -27,14 +27,30 @@ main {
   padding: 16px 0;
 }
 
+.htmx-indicator {
+  display: none;
+}
+
+.htmx-request .htmx-indicator {
+  display: inline;
+}
+
+.htmx-request.htmx-indicator {
+  display: inline;
+}
+
+.htmx-request .htmx-placeholder {
+    display: none;
+}
+
 /* Transitions */
 a, button {
-    transition: color 300ms ease-out, background 300ms ease-out; 
-    cursor: pointer;
+  transition: color 300ms ease-out, background 300ms ease-out; 
+  cursor: pointer;
 }
 
 .btn {
-    padding: 6px 16px;
-    border-radius: 20px;
-    font-weight: 700;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-weight: 700;
 }

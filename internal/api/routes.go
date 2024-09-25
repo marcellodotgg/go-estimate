@@ -22,14 +22,23 @@ func Start() {
 	router.Static("/static", "public/")
 	router.StaticFS("/.well-known/acme-challenge", http.Dir("/var/www/html/.well-known/acme-challenge"))
 	// Setup API routes
-	setupRoutes()
+	setupHomePageRoutes()
+	setupBreakoutRoutes()
 	// Run the API
 	router.Run()
 }
 
-func setupRoutes() {
+func setupHomePageRoutes() {
 	controller := controller.NewHomePageController()
 
 	router.
 		GET("", controller.HomePage)
+}
+
+func setupBreakoutRoutes() {
+	controller := controller.NewBreakoutController()
+
+	router.
+		Group("breakout").
+		PUT("", controller.Create)
 }

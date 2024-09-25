@@ -22,10 +22,12 @@
             <p class="text-lg">
                 Because every other estimate application makes you pay, bombards you with ads, or limits you.
             </p>
-            <button class="my-2 text-lg w-fit btn bg-sky-700 text-white hover:bg-sky-800">
-                Start a Session
+            <button class="my-2 text-lg w-fit btn bg-sky-700 text-white hover:bg-sky-800" hx-put="/breakout"
+                hx-trigger="click" hx-target="body" hx-swap="outerHTML">
+                <span class="htmx-placeholder">Start a Breakout</span>
+                <span class="htmx-indicator">Starting breakout...</span>
             </button>
-            <p class="text-black/60 text-sm">
+            <p class=" text-black/60 text-sm">
                 You can share the link after you start a session.
             </p>
         </div>
