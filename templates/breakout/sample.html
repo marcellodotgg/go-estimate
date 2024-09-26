@@ -1,5 +1,6 @@
 {{ define "breakout/sample" }}
 <div id="breakout">
   This is coming from the web socket {{ range $key, $user := .Users }}{{ $user.Name }} {{ end }}
+  Users online {{ len .Users }}
 </div>
 {{ end }}
