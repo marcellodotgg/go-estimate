@@ -5,12 +5,31 @@
     <title>Team Breakout</title>
     <meta name="description" content="Team breakout - start doing your estimates" />
     {{ template "layout/head" . }}
+    <script>
+      document.addEventListener("htmx:beforeProcessNode", function (evt) {
+        if (!localStorage.getItem("user_id")) {
+          localStorage.setItem("user_id", crypto.randomUUID());
+        }
+        if (!localStorage.getItem("display_name")) {
+          localStorage.setItem("display_name", window.prompt("name") || "");
+        }
+
+        const element = document
+          .getElementById("ws_connection")
+          .setAttribute(
+            "ws-connect",
+            `/ws/123?display_name=${localStorage.getItem(
+              "display_name"
+            )}&user_id=${localStorage.getItem("user_id")}`
+          );
+      });
+    </script>
   </head>
 
   <body>
     {{ template "layout/nav-bar" . }}
     <main>
-      <div class="container" hx-ext="ws" ws-connect="/ws/123?display_name=Marcello&user_id=1">
+      <div id="ws_connection" class="container" hx-ext="ws" ws-connect="">
         <div id="breakout" hx-swap-oob="beforeend"></div>
       </div>
     </main>
