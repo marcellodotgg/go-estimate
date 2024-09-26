@@ -8,45 +8,48 @@ import (
 	"github.com/gomarchy/estimate/internal/infrastructure/websocket"
 )
 
+var (
+	channels = make(map[string]*domain.Breakouts)
+)
+
 type BreakoutService interface {
-	Add(id string)
-	Remove(id string)
+	JoinAs(channel, userID, displayName string)
+	RemoveUser(channel, userID string)
 }
 
 type breakoutService struct {
-	channels map[string]*domain.Breakouts
 }
 
 var tmpl = template.Must(template.ParseGlob("templates/**/*"))
 
 func NewBreakoutService() BreakoutService {
-	return breakoutService{
-		channels: make(map[string]*domain.Breakouts),
+	channels["123"] = &domain.Breakouts{
+		Breakout: domain.Breakout{
+			Users: make(map[string]domain.User),
+		},
 	}
+	return breakoutService{}
 }
 
-func (s breakoutService) Add(channel string) {
-	_, exists := s.channels[channel]
-
-	if !exists {
-		s.channels[channel] = &domain.Breakouts{}
+func (s breakoutService) JoinAs(channel, userID, displayName string) {
+	channels[channel].Mux.Lock()
+	defer channels[channel].Mux.Unlock()
+	channels[channel].Breakout.Users[userID] = domain.User{
+		Name: displayName,
+		Vote: "",
 	}
-
-	s.channels[channel].Mux.Lock()
-	defer s.channels[channel].Mux.Unlock()
-	s.channels[channel].Breakout.UsersCount++
-	s.UpdateChannel(channel)
+	s.updateChannel(channel)
 }
 
-func (s breakoutService) Remove(channel string) {
-	s.channels[channel].Mux.Lock()
-	defer s.channels[channel].Mux.Unlock()
-	s.channels[channel].Breakout.UsersCount--
-	s.UpdateChannel(channel)
+func (s breakoutService) RemoveUser(channel, userID string) {
+	channels[channel].Mux.Lock()
+	defer channels[channel].Mux.Unlock()
+	delete(channels[channel].Breakout.Users, userID)
+	s.updateChannel(channel)
 }
 
-func (s breakoutService) UpdateChannel(channel string) {
-	html, err := s.renderTemplateToString("breakout/sample", s.channels[channel].Breakout)
+func (s breakoutService) updateChannel(channel string) {
+	html, err := s.renderTemplateToString("breakout/sample", channels[channel].Breakout)
 	if err != nil {
 		return
 	}

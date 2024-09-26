@@ -8,5 +8,10 @@ type Breakouts struct {
 }
 
 type Breakout struct {
-	UsersCount int
+	Users map[string]User
+}
+
+type User struct {
+	Name string
+	Vote string
 }

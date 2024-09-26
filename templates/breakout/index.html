@@ -1,23 +1,20 @@
 {{ define "breakout/index" }}
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
+  <head>
     <title>Team Breakout</title>
     <meta name="description" content="Team breakout - start doing your estimates" />
     {{ template "layout/head" . }}
-</head>
+  </head>
 
-<body>
+  <body>
     {{ template "layout/nav-bar" . }}
     <main>
-        <div class="container" hx-ext="ws" ws-connect="/ws/123">
-            <div id="breakout" hx-swap-oob="beforeend">
-            </div>
-        </div>
+      <div class="container" hx-ext="ws" ws-connect="/ws/123?display_name=Marcello&user_id=1">
+        <div id="breakout" hx-swap-oob="beforeend"></div>
+      </div>
     </main>
     {{ template "layout/footer" . }} {{ template "layout/scripts" . }}
-</body>
-
+  </body>
 </html>
 {{ end }}

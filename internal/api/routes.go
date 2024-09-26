@@ -58,11 +58,19 @@ func setupWebSocket() {
 
 	websocket.Manager.HandleConnect(func(s *melody.Session) {
 		channel, _ := s.Get("channel")
-		breakoutService.Add(channel.(string))
+		displayName := s.Request.URL.Query().Get("display_name")
+		userID := s.Request.URL.Query().Get("user_id")
+
+		if displayName == "" || userID == "" {
+			return
+		}
+
+		breakoutService.JoinAs(channel.(string), userID, displayName)
 	})
 
 	websocket.Manager.HandleDisconnect(func(s *melody.Session) {
 		channel, _ := s.Get("channel")
-		breakoutService.Remove(channel.(string))
+		userID := s.Request.URL.Query().Get("user_id")
+		breakoutService.RemoveUser(channel.(string), userID)
 	})
 }
