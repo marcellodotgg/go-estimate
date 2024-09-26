@@ -11,8 +11,9 @@
 <body>
     {{ template "layout/nav-bar" . }}
     <main>
-        <div class="container">
-            Cards and voting will be going here.
+        <div class="container" hx-ext="ws" ws-connect="/ws/123">
+            <div id="breakout" hx-swap-oob="beforeend">
+            </div>
         </div>
     </main>
     {{ template "layout/footer" . }} {{ template "layout/scripts" . }}
