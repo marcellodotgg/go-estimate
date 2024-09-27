@@ -40,7 +40,6 @@ func (s breakoutService) Create(userID string) (domain.Breakout, error) {
 }
 
 func (s breakoutService) AddUser(breakoutID, userID string) {
-	// check if the user already exists
 	if err := database.DB.First(&domain.User{}, "user_id = ? AND breakout_id = ?", userID, breakoutID).Error; err == nil {
 		s.broadcast(breakoutID)
 		return
@@ -53,18 +52,12 @@ func (s breakoutService) AddUser(breakoutID, userID string) {
 		Vote:       "",
 	}
 
-	if err := database.DB.Create(&user).Error; err != nil {
-		return
-	}
-
+	database.DB.Create(&user)
 	s.broadcast(breakoutID)
 }
 
 func (s breakoutService) RemoveUser(breakoutID, userID string) {
-	if err := database.DB.Delete(domain.User{}, "breakout_id = ? AND user_id = ?", breakoutID, userID).Error; err != nil {
-		return
-	}
-
+	database.DB.Delete(domain.User{}, "breakout_id = ? AND user_id = ?", breakoutID, userID)
 	s.broadcast(breakoutID)
 }
 
