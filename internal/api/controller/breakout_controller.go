@@ -6,7 +6,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/gomarchy/estimate/internal/service"
-	"github.com/google/uuid"
 )
 
 type breakoutController struct {
@@ -27,7 +26,7 @@ func (c breakoutController) Index(ctx *gin.Context) {
 	c.ID, _ = ctx.GetQuery("id")
 	c.UserID = ctx.MustGet("user_id").(string)
 
-	if _, exists := service.Channels[c.ID]; !exists {
+	if !c.breakoutService.Exists(c.ID) {
 		ctx.HTML(http.StatusNotFound, "404", c)
 		return
 	}
@@ -37,7 +36,12 @@ func (c breakoutController) Index(ctx *gin.Context) {
 
 func (c breakoutController) Create(ctx *gin.Context) {
 	c.reset(ctx)
-	breakoutID := uuid.NewString()
-	c.breakoutService.Create(breakoutID, ctx.MustGet("user_id").(string))
-	ctx.Header("HX-Redirect", fmt.Sprintf("/breakout?id=%s", breakoutID))
+	breakout, err := c.breakoutService.Create(ctx.MustGet("user_id").(string))
+
+	if err != nil {
+		ctx.HTML(http.StatusNotFound, "404", c)
+		return
+	}
+
+	ctx.Header("HX-Redirect", fmt.Sprintf("/breakout?id=%s", breakout.ID))
 }
