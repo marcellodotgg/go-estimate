@@ -1,39 +1,22 @@
 {{ define "breakout/index" }}
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+
+<head>
     <title>Team Breakout</title>
     <meta name="description" content="Team breakout - start doing your estimates" />
     {{ template "layout/head" . }}
-    <script>
-      document.addEventListener("htmx:beforeProcessNode", function (evt) {
-        if (!localStorage.getItem("user_id")) {
-          localStorage.setItem("user_id", crypto.randomUUID());
-        }
-        if (!localStorage.getItem("display_name")) {
-          localStorage.setItem("display_name", window.prompt("name") || "");
-        }
+</head>
 
-        const element = document
-          .getElementById("ws_connection")
-          .setAttribute(
-            "ws-connect",
-            `/ws/123?display_name=${localStorage.getItem(
-              "display_name"
-            )}&user_id=${localStorage.getItem("user_id")}`
-          );
-      });
-    </script>
-  </head>
-
-  <body>
+<body>
     {{ template "layout/nav-bar" . }}
     <main>
-      <div id="ws_connection" class="container" hx-ext="ws" ws-connect="">
-        <div id="breakout" hx-swap-oob="beforeend"></div>
-      </div>
+        <div id="ws_connection" class="container" hx-ext="ws" ws-connect="/ws/{{ .ID }}?user_id={{ .UserID }}">
+            <div id="breakout" hx-swap-oob="beforeend"></div>
+        </div>
     </main>
     {{ template "layout/footer" . }} {{ template "layout/scripts" . }}
-  </body>
+</body>
+
 </html>
 {{ end }}

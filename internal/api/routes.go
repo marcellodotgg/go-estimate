@@ -7,6 +7,7 @@ import (
 	"github.com/gin-contrib/gzip"
 	"github.com/gin-gonic/gin"
 	"github.com/gomarchy/estimate/internal/api/controller"
+	"github.com/gomarchy/estimate/internal/api/middleware"
 	"github.com/gomarchy/estimate/internal/infrastructure/websocket"
 	"github.com/gomarchy/estimate/internal/service"
 	"github.com/olahol/melody"
@@ -19,6 +20,7 @@ func Start() {
 		gin.SetMode(gin.ReleaseMode)
 	}
 	router.Use(gzip.Gzip(gzip.DefaultCompression))
+	router.Use(middleware.Audit())
 	// Load templates
 	router.LoadHTMLGlob("templates/**/*")
 	// Load static files
@@ -58,14 +60,13 @@ func setupWebSocket() {
 
 	websocket.Manager.HandleConnect(func(s *melody.Session) {
 		channel, _ := s.Get("channel")
-		displayName := s.Request.URL.Query().Get("display_name")
 		userID := s.Request.URL.Query().Get("user_id")
 
-		if displayName == "" || userID == "" {
+		if userID == "" {
 			return
 		}
 
-		breakoutService.JoinAs(channel.(string), userID, displayName)
+		breakoutService.AddUser(channel.(string), userID)
 	})
 
 	websocket.Manager.HandleDisconnect(func(s *melody.Session) {

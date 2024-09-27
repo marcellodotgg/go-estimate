@@ -8,7 +8,8 @@ type Breakouts struct {
 }
 
 type Breakout struct {
-	Users map[string]User
+	Users   map[string]User
+	OwnerID string
 }
 
 type User struct {

@@ -9,12 +9,13 @@ import (
 )
 
 var (
-	channels = make(map[string]*domain.Breakouts)
+	Channels = make(map[string]*domain.Breakouts)
 )
 
 type BreakoutService interface {
-	JoinAs(channel, userID, displayName string)
+	AddUser(channel, userID string)
 	RemoveUser(channel, userID string)
+	Create(channel, userID string) error
 }
 
 type breakoutService struct {
@@ -23,36 +24,38 @@ type breakoutService struct {
 var tmpl = template.Must(template.ParseGlob("templates/**/*"))
 
 func NewBreakoutService() BreakoutService {
-	channels["123"] = &domain.Breakouts{
-		Breakout: domain.Breakout{
-			Users: make(map[string]domain.User),
-		},
-	}
 	return breakoutService{}
 }
 
-func (s breakoutService) JoinAs(channel, userID, displayName string) {
-	channels[channel].Mux.Lock()
-	defer channels[channel].Mux.Unlock()
-	channels[channel].Breakout.Users[userID] = domain.User{
-		Name: displayName,
+func (s breakoutService) Create(channel, userID string) error {
+	Channels[channel] = &domain.Breakouts{
+		Breakout: domain.Breakout{
+			Users:   make(map[string]domain.User),
+			OwnerID: userID,
+		},
+	}
+	return nil
+}
+
+func (s breakoutService) AddUser(channel, userID string) {
+	Channels[channel].Mux.Lock()
+	defer Channels[channel].Mux.Unlock()
+	Channels[channel].Breakout.Users[userID] = domain.User{
+		Name: "Guest",
 		Vote: "",
 	}
 	s.updateChannel(channel)
 }
 
 func (s breakoutService) RemoveUser(channel, userID string) {
-	channels[channel].Mux.Lock()
-	defer channels[channel].Mux.Unlock()
-	delete(channels[channel].Breakout.Users, userID)
+	Channels[channel].Mux.Lock()
+	defer Channels[channel].Mux.Unlock()
+	delete(Channels[channel].Breakout.Users, userID)
 	s.updateChannel(channel)
 }
 
 func (s breakoutService) updateChannel(channel string) {
-	html, err := s.renderTemplateToString("breakout/sample", channels[channel].Breakout)
-	if err != nil {
-		return
-	}
+	html, _ := s.renderTemplateToString("breakout/sample", Channels[channel].Breakout)
 	websocket.UpdateChannel(channel, []byte(html))
 }
 
