@@ -21,6 +21,18 @@
         <div id="breakout" hx-swap-oob="beforeend"></div>
       </div>
       <input id="user_id" type="hidden" value="{{ .UserID }}" />
+      <script>
+        document.addEventListener("DOMContentLoaded", function (evt) {
+          const displayName = localStorage.getItem("display_name");
+
+          if (!displayName) {
+            htmx.ajax("GET", "/update-display-name", {
+              target: "body",
+              swap: "beforeend",
+            });
+          }
+        });
+      </script>
     </main>
     {{ template "layout/footer" . }} {{ template "layout/scripts" . }}
   </body>

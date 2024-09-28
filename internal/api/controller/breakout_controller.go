@@ -89,3 +89,10 @@ func (c breakoutController) Reset(ctx *gin.Context) {
 
 	ctx.HTML(http.StatusNoContent, "", nil)
 }
+
+func (c breakoutController) UpdateDisplayName(ctx *gin.Context) {
+	c.reset(ctx)
+	c.ModalType = "update_display_name"
+
+	ctx.HTML(http.StatusOK, "modal", c)
+}

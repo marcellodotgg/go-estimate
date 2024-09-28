@@ -7,8 +7,9 @@ import (
 )
 
 type pageObject struct {
-	Hash   string
-	UserID string
+	Hash      string
+	UserID    string
+	ModalType string
 }
 
 func (p *pageObject) reset(ctx *gin.Context) {

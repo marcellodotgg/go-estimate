@@ -8,11 +8,11 @@
 
 html,
 body {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    scroll-behavior: smooth;
-    color: var(--text-default);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  scroll-behavior: smooth;
+  color: var(--text-default);
 }
 
 body {
@@ -20,7 +20,7 @@ body {
 }
 
 body footer {
-   margin-top: auto;
+  margin-top: auto;
 }
 
 main {
@@ -40,12 +40,13 @@ main {
 }
 
 .htmx-request .htmx-placeholder {
-    display: none;
+  display: none;
 }
 
 /* Transitions */
-a, button {
-  transition: color 300ms ease-out, background 300ms ease-out; 
+a,
+button {
+  transition: color 300ms ease-out, background 300ms ease-out;
   cursor: pointer;
 }
 
@@ -53,4 +54,141 @@ a, button {
   padding: 6px 16px;
   border-radius: 20px;
   font-weight: 700;
+}
+
+/* Modals */
+.modal {
+  position: fixed;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+  background-color: #22222280;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation-name: fadeIn;
+  animation-duration: 150ms;
+  animation-timing-function: ease;
+}
+
+.modal section.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 25px;
+}
+
+.modal section header h1 {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+  font-weight: 900;
+}
+
+.modal form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.modal form label {
+  display: block;
+  margin-bottom: 2px;
+}
+
+.modal form .actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.modal .alert-banner {
+  margin-bottom: 8px;
+}
+
+.modal > .modal-underlay {
+  position: absolute;
+  z-index: -1;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+}
+
+.modal > .modal-content {
+  max-width: 600px;
+  max-height: calc(100% - 96px);
+  overflow-y: auto;
+  background-color: white;
+  animation-name: zoomIn;
+  animation-duration: 150ms;
+  animation-timing-function: ease;
+  border-radius: 20px;
+}
+
+.modal.closing {
+  animation-name: fadeOut;
+  animation-duration: 150ms;
+  animation-timing-function: ease;
+}
+
+.modal.closing > .modal-content {
+  animation-name: zoomOut;
+  animation-duration: 150ms;
+  animation-timing-function: ease;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes slideIn {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 0;
+  }
+}
+
+@keyframes slideOut {
+  0% {
+    left: 0;
+  }
+  100% {
+    left: -100%;
+  }
+}
+
+@keyframes zoomIn {
+  0% {
+    transform: scale(0.9);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes zoomOut {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0.9);
+  }
 }

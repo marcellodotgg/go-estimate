@@ -51,6 +51,7 @@ func setupBreakoutRoutes() {
 	router.Group("breakout/:id").
 		POST("vote", controller.Vote).
 		POST("reset", controller.Reset)
+	router.GET("update-display-name", controller.UpdateDisplayName)
 }
 
 func setupWebSocket() {
