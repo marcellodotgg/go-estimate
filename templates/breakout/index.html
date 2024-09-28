@@ -1,40 +1,51 @@
 {{ define "breakout/index" }}
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
+  <head>
     <title>Team Breakout</title>
     <meta name="description" content="Team breakout - start doing your estimates" />
     {{ template "layout/head" . }}
-</head>
+  </head>
 
-<body>
+  <body>
     {{ template "layout/nav-bar" . }}
     <main>
-        <div id="ws_connection" class="container" hx-ext="ws" ws-connect="/ws/{{ .Breakout.ID }}?user_id={{ .UserID }}">
-            <div class="flex flex-col md:flex-row gap-4">
-                <div id="voting-cards" hx-swap-oob="beforeend">
-                    {{ template "breakout/cards" .Breakout }}
-                </div>
-                <div id="breakout" hx-swap-oob="beforeend"></div>
-            </div>
+      <div
+        id="ws_connection"
+        class="container"
+        hx-ext="ws"
+        ws-connect="/ws/{{ .Breakout.ID }}?user_id={{ .UserID }}"
+      >
+        <div class="flex flex-col md:flex-row gap-4">
+          <div id="voting-cards" hx-swap-oob="beforeend">
+            {{ template "breakout/cards" .Breakout }}
+          </div>
+          <div id="breakout" hx-swap-oob="beforeend"></div>
         </div>
-        <input id="user_id" type="hidden" value="{{ .UserID }}" />
-        <script>
-            document.addEventListener("DOMContentLoaded", function (evt) {
-                const hasName = localStorage.getItem("confirmed_name");
+      </div>
+      <input id="user_id" type="hidden" value="{{ .UserID }}" />
+      <script>
+        document.addEventListener("DOMContentLoaded", function (evt) {
+          const breakout = JSON.parse(localStorage.getItem("{{.Breakout.ID}}") || "{}");
 
-                if (!hasName) {
-                    htmx.ajax("GET", "/breakout/{{ .Breakout.ID }}/update-display-name", {
-                        target: "body",
-                        swap: "beforeend",
-                    });
-                }
+          if (!breakout.confirmedName) {
+            htmx.ajax("GET", "/breakout/{{ .Breakout.ID }}/update-display-name", {
+              target: "body",
+              swap: "beforeend",
             });
-        </script>
+          }
+        });
+
+        document.body.addEventListener("confirmedName", function () {
+          confirmedName();
+        });
+
+        function confirmedName() {
+          localStorage.setItem("{{.Breakout.ID}}", JSON.stringify({ confirmedName: true }));
+        }
+      </script>
     </main>
     {{ template "layout/footer" . }} {{ template "layout/scripts" . }}
-</body>
-
+  </body>
 </html>
 {{ end }}
