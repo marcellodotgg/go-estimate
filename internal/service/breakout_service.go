@@ -54,7 +54,7 @@ func (s breakoutService) Create(userID string) (domain.Breakout, error) {
 
 func (s breakoutService) AddUser(breakoutID, userID string) {
 	if err := database.DB.First(&domain.Connection{}, "user_id = ? AND breakout_id = ?", userID, breakoutID).Error; err == nil {
-		database.DB.Where("breakout_id = ? AND user_id = ?", breakoutID, userID).Model(&domain.Connection{}).Update("is_online", true)
+		database.DB.Where("breakout_id = ? AND user_id = ?", breakoutID, userID).Model(&domain.Connection{}).Update("is_connected", true)
 		s.broadcast.Breakout(breakoutID)
 		return
 	}
@@ -64,7 +64,7 @@ func (s breakoutService) AddUser(breakoutID, userID string) {
 		UserID:      userID,
 		BreakoutID:  breakoutID,
 		Vote:        "",
-		IsOnline:    true,
+		IsConnected: true,
 	}
 
 	database.DB.Create(&user)
@@ -72,6 +72,6 @@ func (s breakoutService) AddUser(breakoutID, userID string) {
 }
 
 func (s breakoutService) RemoveUser(breakoutID, userID string) {
-	database.DB.Where("breakout_id = ? AND user_id = ?", breakoutID, userID).Model(&domain.Connection{}).Update("is_online", false)
+	database.DB.Where("breakout_id = ? AND user_id = ?", breakoutID, userID).Model(&domain.Connection{}).Update("is_connected", false)
 	s.broadcast.Breakout(breakoutID)
 }

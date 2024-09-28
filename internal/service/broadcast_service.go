@@ -25,7 +25,7 @@ func NewBroadcastService() BroadcastService {
 // If this errors, it is a no-op.
 func (s broadcastService) Breakout(breakoutID string) {
 	var breakout domain.Breakout
-	if err := database.DB.Preload("Connections", "is_online = ?", true).First(&breakout, "id = ?", breakoutID).Error; err != nil {
+	if err := database.DB.Preload("Connections", "is_connected = ?", true).First(&breakout, "id = ?", breakoutID).Error; err != nil {
 		return
 	}
 
@@ -38,7 +38,7 @@ func (s broadcastService) Breakout(breakoutID string) {
 // Broadcasts a reset vote event
 func (s broadcastService) ResetVotes(breakoutID string) {
 	var breakout domain.Breakout
-	if err := database.DB.Preload("Connections", "is_online = ?", true).First(&breakout, "id = ?", breakoutID).Error; err != nil {
+	if err := database.DB.Preload("Connections", "is_connected = ?", true).First(&breakout, "id = ?", breakoutID).Error; err != nil {
 		return
 	}
 

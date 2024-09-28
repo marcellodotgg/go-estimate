@@ -44,7 +44,7 @@ func (v voteService) Vote(connection *domain.Connection, value string) {
 	database.DB.First(connection)
 
 	var breakout domain.Breakout
-	database.DB.Preload("Connections", "is_online = ?", true).First(&breakout, "id = ?", connection.BreakoutID)
+	database.DB.Preload("Connections", "is_connected = ?", true).First(&breakout, "id = ?", connection.BreakoutID)
 
 	if v.didEveryoneVote(breakout) {
 		v.ShowVotes(&breakout)

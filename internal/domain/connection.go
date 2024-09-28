@@ -7,5 +7,5 @@ type Connection struct {
 	Breakout    Breakout `gorm:"foreignKey:BreakoutID; OnDelete:CASCADE"`
 	DisplayName string
 	Vote        string
-	IsOnline    bool `gorm:"int; default:0"`
+	IsConnected bool `gorm:"int; default:0"`
 }
