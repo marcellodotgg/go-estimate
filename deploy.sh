@@ -32,8 +32,8 @@ docker kill estimate_container
 docker container prune -f
 docker run -d \
        -p 8083:8080 \
-       -v $(pwd)/estimate.db:/app/estimate.db \
+       -v $(pwd)/estimates.db:/app/estimates.db \
        -v /var/www/html:/var/www/html \
-       -e DATABASE_URL=/app/estimate.db \
+       -e DATABASE_URL=/app/estimates.db \
        -e GIN_MODE=release \
        --name estimate_container estimate
