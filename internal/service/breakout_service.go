@@ -20,8 +20,6 @@ type BreakoutService interface {
 type breakoutService struct {
 }
 
-var tmpl = template.Must(template.ParseGlob("templates/**/*"))
-
 func NewBreakoutService() BreakoutService {
 	return breakoutService{}
 }
@@ -61,6 +59,8 @@ func (s breakoutService) RemoveUser(breakoutID, userID string) {
 	s.broadcast(breakoutID)
 }
 
+// Broadcasts the latest version of the breakout that matches the given `breakoutID`.
+// If this errors, it is a no-op.
 func (s breakoutService) broadcast(breakoutID string) {
 	var breakout domain.Breakout
 	if err := database.DB.Preload("Users").First(&breakout, "id = ?", breakoutID).Error; err != nil {
@@ -72,6 +72,7 @@ func (s breakoutService) broadcast(breakoutID string) {
 
 func (s breakoutService) renderTemplateToString(templateName string, data interface{}) (string, error) {
 	var buf bytes.Buffer
+	var tmpl = template.Must(template.ParseGlob("templates/**/*"))
 
 	err := tmpl.ExecuteTemplate(&buf, templateName, data)
 	if err != nil {

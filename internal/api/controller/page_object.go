@@ -7,13 +7,16 @@ import (
 )
 
 type pageObject struct {
-	Hash string
+	Hash   string
+	UserID string
 }
 
-func (p *pageObject) reset(_ *gin.Context) {
+func (p *pageObject) reset(ctx *gin.Context) {
 	if os.Getenv("GIN_MODE") == "release" {
 		p.Hash = os.Getenv("BUILD_HASH")
 	} else {
 		p.Hash = "local"
 	}
+
+	p.UserID = ctx.MustGet("user_id").(string)
 }
