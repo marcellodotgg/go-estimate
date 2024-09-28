@@ -10,14 +10,15 @@
   <body>
     {{ template "layout/nav-bar" . }}
     <main>
-      {{ if eq .UserID .Breakout.CreatedBy }} You are the owner of this breakout {{ end }}
       <div
         id="ws_connection"
         class="container"
         hx-ext="ws"
         ws-connect="/ws/{{ .Breakout.ID }}?user_id={{ .UserID }}"
       >
-        <div id="voting-cards" hx-swap-oob="beforeend">{{ template "vote/index" .Breakout }}</div>
+        <div id="voting-cards" hx-swap-oob="beforeend">
+          {{ template "breakout/cards" .Breakout }}
+        </div>
         <div id="breakout" hx-swap-oob="beforeend"></div>
       </div>
       <input id="user_id" type="hidden" value="{{ .UserID }}" />

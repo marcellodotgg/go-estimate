@@ -73,7 +73,7 @@ func (c breakoutController) Vote(ctx *gin.Context) {
 
 	c.voteService.Vote(&c.CurrentUser, ctx.Query("value"))
 
-	ctx.HTML(http.StatusOK, "vote/index", c.Breakout)
+	ctx.HTML(http.StatusOK, "breakout/cards", c.Breakout)
 }
 
 func (c breakoutController) Reset(ctx *gin.Context) {

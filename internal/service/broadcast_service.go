@@ -38,7 +38,7 @@ func (s broadcastService) ResetVotes(breakoutID string) {
 	if err := database.DB.Preload("Users", "is_online = ?", true).First(&breakout, "id = ?", breakoutID).Error; err != nil {
 		return
 	}
-	html, _ := s.renderTemplateToString("vote/index", breakout)
+	html, _ := s.renderTemplateToString("breakout/cards", breakout)
 	websocket.UpdateChannel(breakout.ID, []byte(html))
 }
 
