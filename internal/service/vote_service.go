@@ -7,6 +7,7 @@ import (
 
 type VoteService interface {
 	Vote(user *domain.User, value string)
+	ShowVotes(breakout *domain.Breakout)
 	Reset(breakout *domain.Breakout)
 }
 
@@ -24,6 +25,12 @@ func (v voteService) Reset(breakout *domain.Breakout) {
 	database.DB.Model(domain.User{}).Where("breakout_id = ?", breakout.ID).Update("vote", "")
 	database.DB.Model(domain.Breakout{}).Where("id = ?", breakout.ID).Update("show_votes", false)
 
+	v.broadcast.ResetVotes(breakout.ID)
+	v.broadcast.Breakout(breakout.ID)
+}
+
+func (v voteService) ShowVotes(breakout *domain.Breakout) {
+	database.DB.Model(domain.Breakout{}).Where("id = ?", breakout.ID).Update("show_votes", true)
 	v.broadcast.ResetVotes(breakout.ID)
 	v.broadcast.Breakout(breakout.ID)
 }

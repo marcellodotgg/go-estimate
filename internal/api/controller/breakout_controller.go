@@ -90,6 +90,20 @@ func (c breakoutController) Reset(ctx *gin.Context) {
 	ctx.HTML(http.StatusNoContent, "", nil)
 }
 
+func (c breakoutController) ShowVotes(ctx *gin.Context) {
+	c.reset(ctx)
+	err := c.load(ctx)
+
+	if err != nil {
+		ctx.HTML(http.StatusNotFound, "404", c)
+		return
+	}
+
+	c.voteService.ShowVotes(&c.Breakout)
+
+	ctx.HTML(http.StatusNoContent, "", nil)
+}
+
 func (c breakoutController) UpdateDisplayNameModal(ctx *gin.Context) {
 	c.reset(ctx)
 	c.load(ctx)

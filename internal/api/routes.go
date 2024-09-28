@@ -51,6 +51,7 @@ func setupBreakoutRoutes() {
 	router.Group("breakout/:id").
 		POST("vote", controller.Vote).
 		POST("reset", controller.Reset).
+		POST("show-votes", controller.ShowVotes).
 		GET("update-display-name", controller.UpdateDisplayNameModal).
 		PATCH("update-display-name", controller.UpdateDisplayName)
 }

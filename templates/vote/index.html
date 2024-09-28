@@ -6,6 +6,7 @@
     hx-post="/breakout/{{.ID}}/vote?value=1"
     hx-swap="none"
     onclick="toggle(event)"
+    {{ if .ShowVotes }} disabled {{ end }}
   >
     1
   </button>
@@ -15,6 +16,7 @@
     hx-post="/breakout/{{ .ID }}/vote?value=2"
     hx-swap="none"
     onclick="toggle(event)"
+    {{ if .ShowVotes }} disabled {{ end }}
   >
     2
   </button>

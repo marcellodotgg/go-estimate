@@ -24,7 +24,11 @@
       Reset
     </button>
     {{ else }}
-    <button class="text-2xl bg-gray-300 p-3" hx-post="/breakout/{{ .ID }}/reset" hx-swap="none">
+    <button
+      class="text-2xl bg-gray-300 p-3"
+      hx-post="/breakout/{{ .ID }}/show-votes"
+      hx-swap="none"
+    >
       Show Votes
     </button>
     {{ end }}
