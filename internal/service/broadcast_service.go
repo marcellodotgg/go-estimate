@@ -37,7 +37,7 @@ func (s broadcastService) Breakout(breakoutID string) {
 		{Value: "13"},
 		{Value: "?"},
 	}
-	html, _ := s.renderTemplateToString("breakout/sample", breakout)
+	html, _ := s.renderTemplateToString("breakout/user_panel", breakout)
 	websocket.UpdateChannel(breakout.ID, []byte(html))
 }
 
