@@ -23,10 +23,10 @@
       <input id="user_id" type="hidden" value="{{ .UserID }}" />
       <script>
         document.addEventListener("DOMContentLoaded", function (evt) {
-          const displayName = localStorage.getItem("display_name");
+          const hasName = localStorage.getItem("confirmed_name");
 
-          if (!displayName) {
-            htmx.ajax("GET", "/update-display-name", {
+          if (!hasName) {
+            htmx.ajax("GET", "/breakout/{{ .Breakout.ID }}/update-display-name", {
               target: "body",
               swap: "beforeend",
             });

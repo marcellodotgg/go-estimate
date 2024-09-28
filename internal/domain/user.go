@@ -7,5 +7,5 @@ type User struct {
 	Breakout   Breakout `gorm:"foreignKey:BreakoutID; OnDelete:CASCADE"`
 	Name       string
 	Vote       string
-	IsOnline   bool `gorm:"int" default:0"`
+	IsOnline   bool `gorm:"int; default:0"`
 }

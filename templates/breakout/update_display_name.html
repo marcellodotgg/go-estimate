@@ -4,7 +4,11 @@
     <h1>Create Display Name</h1>
     <p class="text-muted">Let's use something so your team can identify you more easily.</p>
   </header>
-  <form hx-patch="/update-display-name" hx-swap="outerHTML" hx-disabled-elt="button, input">
+  <form
+    hx-patch="/breakout/{{ .Breakout.ID }}/update-display-name"
+    hx-swap="outerHTML"
+    hx-disabled-elt="button, input"
+  >
     <label for="display_name" class="text-sm font-semibold">Display Name</label>
     <input
       id="display_name"
@@ -22,7 +26,7 @@
         type="submit"
         class="btn-primary bg-sky-200 rounded-xl font-semibold px-3 py-1.5 hover:bg-sky-300"
       >
-        <div class="htmx-toggle">Update</div>
+        <div class="htmx-placeholder">Update</div>
         <div class="htmx-indicator">Updating...</div>
       </button>
     </div>

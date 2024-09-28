@@ -90,9 +90,24 @@ func (c breakoutController) Reset(ctx *gin.Context) {
 	ctx.HTML(http.StatusNoContent, "", nil)
 }
 
-func (c breakoutController) UpdateDisplayName(ctx *gin.Context) {
+func (c breakoutController) UpdateDisplayNameModal(ctx *gin.Context) {
 	c.reset(ctx)
+	c.load(ctx)
 	c.ModalType = "update_display_name"
 
 	ctx.HTML(http.StatusOK, "modal", c)
+}
+
+func (c breakoutController) UpdateDisplayName(ctx *gin.Context) {
+	c.reset(ctx)
+	c.load(ctx)
+
+	form := GetForm(ctx)
+	c.CurrentUser.Name = form.Data["display_name"]
+
+	if err := c.breakoutService.UpdateUser(c.CurrentUser); err != nil {
+		return
+	}
+
+	ctx.Header("HX-Trigger", "closeModal, confirmedName")
 }

@@ -9,6 +9,7 @@ import (
 type BreakoutService interface {
 	AddUser(breakoutID, userID string)
 	RemoveUser(breakoutID, userID string)
+	UpdateUser(user domain.User) error
 	Create(userID string) (domain.Breakout, error)
 	FindByID(breakoutID string) (domain.Breakout, error)
 }
@@ -29,6 +30,14 @@ func (s breakoutService) FindByID(breakoutID string) (domain.Breakout, error) {
 		return breakout, err
 	}
 	return breakout, nil
+}
+
+func (s breakoutService) UpdateUser(user domain.User) error {
+	if err := database.DB.Model(&user).Update("name", user.Name).Error; err != nil {
+		return err
+	}
+	s.broadcast.Breakout(user.BreakoutID)
+	return nil
 }
 
 func (s breakoutService) Create(userID string) (domain.Breakout, error) {

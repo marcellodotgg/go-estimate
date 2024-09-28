@@ -12,6 +12,14 @@
       evt.detail.isError = false;
     }
   });
+
+  document.body.addEventListener("closeModal", function () {
+    closeModal();
+  });
+
+  document.body.addEventListener("confirmedName", function () {
+    confirmedName();
+  });
 </script>
 
 <script>
@@ -26,6 +34,10 @@
       modal.remove();
       modal.removeEventListener("animationend", handleAnimationEnd);
     });
+  }
+
+  function confirmedName() {
+    localStorage.setItem("confirmed_name", "true");
   }
 </script>
 {{ end }}
