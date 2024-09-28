@@ -72,7 +72,6 @@ func (c breakoutController) Vote(ctx *gin.Context) {
 	}
 
 	c.voteService.Vote(&c.CurrentUser, ctx.Query("value"))
-	c.breakoutService.Broadcast(c.Breakout.ID)
 
 	ctx.HTML(http.StatusOK, "vote/index", c.Breakout)
 }
@@ -87,7 +86,6 @@ func (c breakoutController) Reset(ctx *gin.Context) {
 	}
 
 	c.voteService.Reset(&c.Breakout)
-	c.breakoutService.Broadcast(c.Breakout.ID)
 
 	ctx.HTML(http.StatusNoContent, "", nil)
 }

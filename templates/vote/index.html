@@ -2,21 +2,31 @@
 <div id="voting-cards">
   <button
     id="vote-1"
-    class="text-2xl p-2 big-sky-100"
+    class="text-2xl p-2 bg-sky-100 hover:bg-sky-200"
     hx-post="/breakout/{{.ID}}/vote?value=1"
-    hx-target="#voting-cards"
-    hx-swap="outerHTML"
+    hx-swap="none"
+    onclick="toggle(event)"
   >
     1
   </button>
   <button
     id="vote-2"
-    class="text-2xl p-2 big-sky-100"
+    class="text-2xl p-2 bg-sky-100 hover:bg-sky-200"
     hx-post="/breakout/{{ .ID }}/vote?value=2"
-    hx-target="#voting-cards"
-    hx-swap="outerHTML"
+    hx-swap="none"
+    onclick="toggle(event)"
   >
     2
   </button>
+  <script>
+    function toggle(evt) {
+      document.querySelectorAll("#voting-cards button").forEach((button) => {
+        button.classList.remove("bg-sky-300");
+        button.classList.add("bg-sky-100");
+      });
+      evt.target.classList.remove("bg-sky-100");
+      evt.target.classList.add("bg-sky-300");
+    }
+  </script>
 </div>
 {{ end }}

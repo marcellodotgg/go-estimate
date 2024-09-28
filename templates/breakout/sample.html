@@ -1,7 +1,7 @@
 {{ define "breakout/sample" }}
 <div id="breakout">
-  {{ template "vote/index" . }} This is coming from the web socket {{ range .Users }}{{ .Name }} {{
-  end }} Users online {{ len .Users }}
+  This is coming from the web socket {{ range .Users }}{{ .Name }} {{ end }} Users online {{ len
+  .Users }}
   <table>
     <thead>
       <tr>
