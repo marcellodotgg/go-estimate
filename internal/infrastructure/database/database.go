@@ -22,5 +22,5 @@ func Connect() {
 
 func Migrate() {
 	DB.AutoMigrate(&domain.Breakout{})
-	DB.AutoMigrate(&domain.User{})
+	DB.AutoMigrate(&domain.Connection{})
 }

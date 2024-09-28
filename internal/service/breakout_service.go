@@ -9,7 +9,7 @@ import (
 type BreakoutService interface {
 	AddUser(breakoutID, userID string)
 	RemoveUser(breakoutID, userID string)
-	UpdateUser(user domain.User) error
+	UpdateDisplayName(connection domain.Connection) error
 	Create(userID string) (domain.Breakout, error)
 	FindByID(breakoutID string) (domain.Breakout, error)
 }
@@ -30,23 +30,16 @@ func (s breakoutService) FindByID(breakoutID string) (domain.Breakout, error) {
 		return breakout, err
 	}
 
-	breakout.Cards = []domain.Card{
-		{Value: "1"},
-		{Value: "2"},
-		{Value: "3"},
-		{Value: "5"},
-		{Value: "8"},
-		{Value: "13"},
-		{Value: "?"},
-	}
+	breakout.Cards = FibonacciCards()
+
 	return breakout, nil
 }
 
-func (s breakoutService) UpdateUser(user domain.User) error {
-	if err := database.DB.Model(&user).Update("name", user.Name).Error; err != nil {
+func (s breakoutService) UpdateDisplayName(connection domain.Connection) error {
+	if err := database.DB.Model(&connection).Update("display_name", connection.DisplayName).Error; err != nil {
 		return err
 	}
-	s.broadcast.Breakout(user.BreakoutID)
+	s.broadcast.Breakout(connection.BreakoutID)
 	return nil
 }
 
@@ -60,18 +53,18 @@ func (s breakoutService) Create(userID string) (domain.Breakout, error) {
 }
 
 func (s breakoutService) AddUser(breakoutID, userID string) {
-	if err := database.DB.First(&domain.User{}, "user_id = ? AND breakout_id = ?", userID, breakoutID).Error; err == nil {
-		database.DB.Where("breakout_id = ? AND user_id = ?", breakoutID, userID).Model(&domain.User{}).Update("is_online", true)
+	if err := database.DB.First(&domain.Connection{}, "user_id = ? AND breakout_id = ?", userID, breakoutID).Error; err == nil {
+		database.DB.Where("breakout_id = ? AND user_id = ?", breakoutID, userID).Model(&domain.Connection{}).Update("is_online", true)
 		s.broadcast.Breakout(breakoutID)
 		return
 	}
 
-	user := domain.User{
-		Name:       "Guest",
-		UserID:     userID,
-		BreakoutID: breakoutID,
-		Vote:       "",
-		IsOnline:   true,
+	user := domain.Connection{
+		DisplayName: "Guest",
+		UserID:      userID,
+		BreakoutID:  breakoutID,
+		Vote:        "",
+		IsOnline:    true,
 	}
 
 	database.DB.Create(&user)
@@ -79,6 +72,6 @@ func (s breakoutService) AddUser(breakoutID, userID string) {
 }
 
 func (s breakoutService) RemoveUser(breakoutID, userID string) {
-	database.DB.Where("breakout_id = ? AND user_id = ?", breakoutID, userID).Model(&domain.User{}).Update("is_online", false)
+	database.DB.Where("breakout_id = ? AND user_id = ?", breakoutID, userID).Model(&domain.Connection{}).Update("is_online", false)
 	s.broadcast.Breakout(breakoutID)
 }

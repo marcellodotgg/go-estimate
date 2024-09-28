@@ -13,7 +13,7 @@ import (
 type breakoutController struct {
 	pageObject
 	Breakout        domain.Breakout
-	CurrentUser     domain.User
+	Connection      domain.Connection
 	breakoutService service.BreakoutService
 	voteService     service.VoteService
 }
@@ -34,7 +34,7 @@ func (c *breakoutController) load(ctx *gin.Context) error {
 
 	c.Breakout = breakout
 
-	database.DB.First(&c.CurrentUser, "user_id = ? AND breakout_id = ?", c.UserID, breakout.ID)
+	database.DB.First(&c.Connection, "user_id = ? AND breakout_id = ?", c.UserID, breakout.ID)
 	return nil
 }
 
@@ -71,7 +71,7 @@ func (c breakoutController) Vote(ctx *gin.Context) {
 		return
 	}
 
-	c.voteService.Vote(&c.CurrentUser, ctx.Query("value"))
+	c.voteService.Vote(&c.Connection, ctx.Query("display-value"))
 
 	ctx.HTML(http.StatusOK, "breakout/cards", c.Breakout)
 }
@@ -117,9 +117,9 @@ func (c breakoutController) UpdateDisplayName(ctx *gin.Context) {
 	c.load(ctx)
 
 	form := GetForm(ctx)
-	c.CurrentUser.Name = form.Data["display_name"]
+	c.Connection.DisplayName = form.Data["display_name"]
 
-	if err := c.breakoutService.UpdateUser(c.CurrentUser); err != nil {
+	if err := c.breakoutService.UpdateDisplayName(c.Connection); err != nil {
 		return
 	}
 
