@@ -46,8 +46,11 @@ func setupBreakoutRoutes() {
 
 	router.
 		Group("breakout").
-		GET("", controller.Index).
+		GET(":id", controller.Index).
 		PUT("", controller.Create)
+	router.Group("breakout/:id").
+		POST("vote", controller.Vote).
+		POST("reset", controller.Reset)
 }
 
 func setupWebSocket() {

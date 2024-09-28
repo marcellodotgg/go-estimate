@@ -1,6 +1,42 @@
 {{ define "breakout/sample" }}
 <div id="breakout">
-  This is coming from the web socket {{ range .Users }}{{ .Name }} {{ end }}
-  Users online {{ len .Users }}
+  {{ template "vote/index" . }} This is coming from the web socket {{ range .Users }}{{ .Name }} {{
+  end }} Users online {{ len .Users }}
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Vote</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{ range .Users }}
+      <tr>
+        <td>{{ .Name }} {{ if ne .Vote "" }} (Ready) {{ end }}</td>
+        <td>{{ if $.ShowVotes }} {{ .Vote }} {{ end }}</td>
+      </tr>
+      {{ end }}
+    </tbody>
+  </table>
+  <div id="admin-controls" style="display: none">
+    {{ if .ShowVotes }}
+    <button class="text-2xl bg-gray-300 p-3" hx-post="/breakout/{{ .ID }}/reset" hx-swap="none">
+      Reset
+    </button>
+    {{ else }}
+    <button class="text-2xl bg-gray-300 p-3" hx-post="/breakout/{{ .ID }}/reset" hx-swap="none">
+      Show Votes
+    </button>
+    {{ end }}
+  </div>
+  <script>
+    document.addEventListener("htmx:load", function (evt) {
+      localStorage.setItem("user_id", document.getElementById("user_id").value);
+
+      if (localStorage.getItem("user_id") === "{{ .CreatedBy }}") {
+        document.getElementById("admin-controls").style.display = "block";
+      }
+    });
+  </script>
 </div>
 {{ end }}

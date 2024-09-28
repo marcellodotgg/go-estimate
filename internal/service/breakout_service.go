@@ -14,7 +14,8 @@ type BreakoutService interface {
 	AddUser(breakoutID, userID string)
 	RemoveUser(breakoutID, userID string)
 	Create(userID string) (domain.Breakout, error)
-	Exists(breakoutID string) bool
+	FindByID(breakoutID string) (domain.Breakout, error)
+	Broadcast(breakoutID string)
 }
 
 type breakoutService struct {
@@ -24,8 +25,12 @@ func NewBreakoutService() BreakoutService {
 	return breakoutService{}
 }
 
-func (s breakoutService) Exists(breakoutID string) bool {
-	return database.DB.First(&domain.Breakout{}, "id = ?", breakoutID).Error == nil
+func (s breakoutService) FindByID(breakoutID string) (domain.Breakout, error) {
+	var breakout domain.Breakout
+	if err := database.DB.First(&breakout, "id = ?", breakoutID).Error; err != nil {
+		return breakout, err
+	}
+	return breakout, nil
 }
 
 func (s breakoutService) Create(userID string) (domain.Breakout, error) {
@@ -39,7 +44,8 @@ func (s breakoutService) Create(userID string) (domain.Breakout, error) {
 
 func (s breakoutService) AddUser(breakoutID, userID string) {
 	if err := database.DB.First(&domain.User{}, "user_id = ? AND breakout_id = ?", userID, breakoutID).Error; err == nil {
-		s.broadcast(breakoutID)
+		database.DB.Where("breakout_id = ? AND user_id = ?", breakoutID, userID).Model(&domain.User{}).Update("is_online", true)
+		s.Broadcast(breakoutID)
 		return
 	}
 
@@ -48,22 +54,23 @@ func (s breakoutService) AddUser(breakoutID, userID string) {
 		UserID:     userID,
 		BreakoutID: breakoutID,
 		Vote:       "",
+		IsOnline:   true,
 	}
 
 	database.DB.Create(&user)
-	s.broadcast(breakoutID)
+	s.Broadcast(breakoutID)
 }
 
 func (s breakoutService) RemoveUser(breakoutID, userID string) {
-	database.DB.Delete(domain.User{}, "breakout_id = ? AND user_id = ?", breakoutID, userID)
-	s.broadcast(breakoutID)
+	database.DB.Where("breakout_id = ? AND user_id = ?", breakoutID, userID).Model(&domain.User{}).Update("is_online", false)
+	s.Broadcast(breakoutID)
 }
 
 // Broadcasts the latest version of the breakout that matches the given `breakoutID`.
 // If this errors, it is a no-op.
-func (s breakoutService) broadcast(breakoutID string) {
+func (s breakoutService) Broadcast(breakoutID string) {
 	var breakout domain.Breakout
-	if err := database.DB.Preload("Users").First(&breakout, "id = ?", breakoutID).Error; err != nil {
+	if err := database.DB.Preload("Users", "is_online = ?", true).First(&breakout, "id = ?", breakoutID).Error; err != nil {
 		return
 	}
 	html, _ := s.renderTemplateToString("breakout/sample", breakout)

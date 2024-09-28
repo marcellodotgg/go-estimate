@@ -1,0 +1,22 @@
+{{ define "vote/index" }}
+<div id="voting-cards">
+  <button
+    id="vote-1"
+    class="text-2xl p-2 big-sky-100"
+    hx-post="/breakout/{{.ID}}/vote?value=1"
+    hx-target="#voting-cards"
+    hx-swap="outerHTML"
+  >
+    1
+  </button>
+  <button
+    id="vote-2"
+    class="text-2xl p-2 big-sky-100"
+    hx-post="/breakout/{{ .ID }}/vote?value=2"
+    hx-target="#voting-cards"
+    hx-swap="outerHTML"
+  >
+    2
+  </button>
+</div>
+{{ end }}

@@ -5,28 +5,44 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/gomarchy/estimate/internal/domain"
+	"github.com/gomarchy/estimate/internal/infrastructure/database"
 	"github.com/gomarchy/estimate/internal/service"
 )
 
 type breakoutController struct {
 	pageObject
-	ID              string
-	UserID          string
+	Breakout        domain.Breakout
+	CurrentUser     domain.User
 	breakoutService service.BreakoutService
+	voteService     service.VoteService
 }
 
 func NewBreakoutController() breakoutController {
 	return breakoutController{
 		breakoutService: service.NewBreakoutService(),
+		voteService:     service.NewVoteService(),
 	}
+}
+
+func (c *breakoutController) load(ctx *gin.Context) error {
+	breakout, err := c.breakoutService.FindByID(ctx.Param("id"))
+
+	if err != nil {
+		return err
+	}
+
+	c.Breakout = breakout
+
+	database.DB.First(&c.CurrentUser, "user_id = ? AND breakout_id = ?", c.UserID, breakout.ID)
+	return nil
 }
 
 func (c breakoutController) Index(ctx *gin.Context) {
 	c.reset(ctx)
-	c.ID, _ = ctx.GetQuery("id")
-	c.UserID = ctx.MustGet("user_id").(string)
+	err := c.load(ctx)
 
-	if !c.breakoutService.Exists(c.ID) {
+	if err != nil {
 		ctx.HTML(http.StatusNotFound, "404", c)
 		return
 	}
@@ -43,5 +59,35 @@ func (c breakoutController) Create(ctx *gin.Context) {
 		return
 	}
 
-	ctx.Header("HX-Redirect", fmt.Sprintf("/breakout?id=%s", breakout.ID))
+	ctx.Header("HX-Redirect", fmt.Sprintf("/breakout/%s", breakout.ID))
+}
+
+func (c breakoutController) Vote(ctx *gin.Context) {
+	c.reset(ctx)
+	err := c.load(ctx)
+
+	if err != nil {
+		ctx.HTML(http.StatusNotFound, "404", c)
+		return
+	}
+
+	c.voteService.Vote(&c.CurrentUser, ctx.Query("value"))
+	c.breakoutService.Broadcast(c.Breakout.ID)
+
+	ctx.HTML(http.StatusOK, "vote/index", c.Breakout)
+}
+
+func (c breakoutController) Reset(ctx *gin.Context) {
+	c.reset(ctx)
+	err := c.load(ctx)
+
+	if err != nil {
+		ctx.HTML(http.StatusNotFound, "404", c)
+		return
+	}
+
+	c.voteService.Reset(&c.Breakout)
+	c.breakoutService.Broadcast(c.Breakout.ID)
+
+	ctx.HTML(http.StatusNoContent, "", nil)
 }
