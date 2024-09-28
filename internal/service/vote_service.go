@@ -31,6 +31,7 @@ func (v voteService) Reset(breakout *domain.Breakout) {
 
 func (v voteService) ShowVotes(breakout *domain.Breakout) {
 	database.DB.Model(domain.Breakout{}).Where("id = ?", breakout.ID).Update("show_votes", true)
+
 	v.broadcast.ResetVotes(breakout.ID)
 	v.broadcast.Breakout(breakout.ID)
 }
@@ -42,10 +43,13 @@ func (v voteService) Vote(user *domain.User, value string) {
 	database.DB.Model(user).Update("vote", value)
 	database.DB.First(user)
 
-	// Check to see if everyone voted
 	var breakout domain.Breakout
 	database.DB.Preload("Users", "is_online = ?", true).First(&breakout, "id = ?", user.BreakoutID)
-	database.DB.Model(domain.Breakout{}).Where("id = ?", breakout.ID).Update("show_votes", v.didEveryoneVote(breakout))
+
+	if v.didEveryoneVote(breakout) {
+		v.ShowVotes(&breakout)
+		return
+	}
 
 	v.broadcast.Breakout(breakout.ID)
 }
