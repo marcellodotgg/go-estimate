@@ -28,6 +28,15 @@ func (s broadcastService) Breakout(breakoutID string) {
 	if err := database.DB.Preload("Users", "is_online = ?", true).First(&breakout, "id = ?", breakoutID).Error; err != nil {
 		return
 	}
+	breakout.Cards = []domain.Card{
+		{Value: "1"},
+		{Value: "2"},
+		{Value: "3"},
+		{Value: "5"},
+		{Value: "8"},
+		{Value: "13"},
+		{Value: "?"},
+	}
 	html, _ := s.renderTemplateToString("breakout/sample", breakout)
 	websocket.UpdateChannel(breakout.ID, []byte(html))
 }
@@ -37,6 +46,15 @@ func (s broadcastService) ResetVotes(breakoutID string) {
 	var breakout domain.Breakout
 	if err := database.DB.Preload("Users", "is_online = ?", true).First(&breakout, "id = ?", breakoutID).Error; err != nil {
 		return
+	}
+	breakout.Cards = []domain.Card{
+		{Value: "1"},
+		{Value: "2"},
+		{Value: "3"},
+		{Value: "5"},
+		{Value: "8"},
+		{Value: "13"},
+		{Value: "?"},
 	}
 	html, _ := s.renderTemplateToString("breakout/cards", breakout)
 	websocket.UpdateChannel(breakout.ID, []byte(html))

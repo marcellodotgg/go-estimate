@@ -1,34 +1,20 @@
 {{ define "breakout/cards" }}
-<div id="voting-cards">
-  <button
-    id="vote-1"
-    class="text-2xl p-2 bg-sky-100 hover:bg-sky-200"
-    hx-post="/breakout/{{.ID}}/vote?value=1"
-    hx-swap="none"
-    onclick="toggle(event)"
-    {{ if .ShowVotes }} disabled {{ end }}
-  >
-    1
-  </button>
-  <button
-    id="vote-2"
-    class="text-2xl p-2 bg-sky-100 hover:bg-sky-200"
-    hx-post="/breakout/{{ .ID }}/vote?value=2"
-    hx-swap="none"
-    onclick="toggle(event)"
-    {{ if .ShowVotes }} disabled {{ end }}
-  >
-    2
-  </button>
-  <script>
-    function toggle(evt) {
-      document.querySelectorAll("#voting-cards button").forEach((button) => {
-        button.classList.remove("bg-sky-300");
-        button.classList.add("bg-sky-100");
-      });
-      evt.target.classList.remove("bg-sky-100");
-      evt.target.classList.add("bg-sky-300");
-    }
-  </script>
+<div id="voting-cards" class="flex flex-wrap gap-4 items-center justify-center">
+    {{ range .Cards }}
+    <button
+        class="text-5xl font-extrabold py-12 w-28 rounded-xl bg-sky-50 hover:ring-2 ring-sky-300 hover:bg-sky-100 disabled:ring-gray-300 disabled:hover:ring-1 ring-1"
+        hx-post="/breakout/{{$.ID}}/vote?value={{.Value}}" hx-swap="none" onclick="toggle(event)" {{ if $.ShowVotes }}
+        disabled {{ end }}>
+        {{ .Value }}
+    </button>
+    {{ end }}
+    <script>
+        function toggle(evt) {
+            document.querySelectorAll("#voting-cards button").forEach((button) => {
+                button.classList.remove("active");
+            });
+            evt.target.classList.add("active");
+        }
+    </script>
 </div>
 {{ end }}

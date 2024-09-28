@@ -43,11 +43,29 @@ main {
   display: none;
 }
 
+/* Voting Cards */
+#voting-cards button.active {
+    background: #bae6fd;
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 2px #0ea5e9; 
+}
+
 /* Transitions */
 a,
 button {
   transition: color 300ms ease-out, background 300ms ease-out;
   cursor: pointer;
+}
+
+button:disabled {
+    cursor: not-allowed;
+    background: #e5e7eb;
+}
+
+button:disabled:hover {
+    cursor: not-allowed;
+    background: #d1d5db;
 }
 
 .btn {

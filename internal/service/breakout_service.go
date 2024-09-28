@@ -29,6 +29,16 @@ func (s breakoutService) FindByID(breakoutID string) (domain.Breakout, error) {
 	if err := database.DB.First(&breakout, "id = ?", breakoutID).Error; err != nil {
 		return breakout, err
 	}
+
+	breakout.Cards = []domain.Card{
+		{Value: "1"},
+		{Value: "2"},
+		{Value: "3"},
+		{Value: "5"},
+		{Value: "8"},
+		{Value: "13"},
+		{Value: "?"},
+	}
 	return breakout, nil
 }
 
