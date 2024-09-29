@@ -1,0 +1,21 @@
+name: Deploy to DigitalOcean
+
+on:
+  push:
+    branches:
+      - develop
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Set up SSH
+        run: |
+            mkdir -p ~/.ssh
+            echo "${{ secrets.DO_SSH_KEY }}" > ~/.ssh/id_rsa
+            chmod 600 ~/.ssh/id_rsa
+            ssh-keyscan -H ${{secrets.DO_IP_ADDR}} >> ~/.ssh/known_hosts
+      - name: Deploy to DigitalOcean
+        run: |
+            ssh ${{secrets.DO_USERNAME}}@${{secrets.DO_IP_ADDR}} 'bash -s' < ./your_script.sh
