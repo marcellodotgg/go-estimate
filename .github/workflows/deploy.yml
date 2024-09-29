@@ -19,4 +19,4 @@ jobs:
             ssh-keyscan -H ${{secrets.DO_IP_ADDR}} >> ~/.ssh/known_hosts
       - name: Deploy to DigitalOcean
         run: |
-            ssh ${{secrets.DO_USERNAME}}@${{secrets.DO_IP_ADDR}} 'bash -s' < ./your_script.sh
+            ssh ${{secrets.DO_USERNAME}}@${{secrets.DO_IP_ADDR}} cd estimate && 'bash -s' < ./your_script.sh
