@@ -12,11 +12,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Set up SSH
-        run: |
-            mkdir -p ~/.ssh
-            echo "${{ secrets.DO_SSH_KEY }}" > ~/.ssh/id_rsa
-            chmod 600 ~/.ssh/id_rsa
-            ssh-keyscan -H ${{secrets.DO_IP_ADDR}} >> ~/.ssh/known_hosts
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secretrs.DO_SSH_KEY }}
       - name: Deploy to DigitalOcean
         run: |
-            ssh ${{secrets.DO_USERNAME}}@${{secrets.DO_IP_ADDR}} cd estimate && 'bash -s' < ./your_script.sh
+            ssh -o StrictHostKeyChecking=no ${{secrets.DO_USERNAME}}@${{secrets.DO_IP_ADDR}} 'cd estimate && ./deploy.sh'
