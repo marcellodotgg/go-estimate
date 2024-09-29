@@ -1,7 +1,7 @@
 {{ define "breakout/cards" }}
 <div id="voting-cards" class="flex flex-wrap gap-4 items-center justify-center">
     {{ range .Cards }}
-    <button
+    <button id="voting-{{ .Value }}"
         class="text-4xl md:text-5xl font-extrabold py-4 md:py-12 w-16 md:w-28 rounded-xl bg-sky-50 hover:ring-2 ring-sky-300 hover:bg-sky-100 disabled:ring-gray-300 disabled:hover:ring-1 ring-1"
         hx-post="/breakout/{{$.ID}}/vote?display-value={{.DisplayValue}}" hx-swap="none" onclick="toggle(event)" {{ if
         $.ShowVotes }} disabled {{ end }}>
@@ -10,10 +10,19 @@
     {{ end }}
     <script>
         function toggle(evt) {
-            document.querySelectorAll("#voting-cards button").forEach((button) => {
-                button.classList.remove("active");
+            const clickedButton = document.getElementById(evt.target.id);
+
+            if (clickedButton.classList.contains("active")) {
+                clickedButton.classList.remove("active");
+            } else {
+                clickedButton.classList.add("active");
+            }
+
+            const buttons = document.querySelectorAll("#voting-cards button").forEach((button) => {
+                if (button.id !== clickedButton.id) {
+                    button.classList.remove("active");
+                }
             });
-            evt.target.classList.add("active");
         }
     </script>
 </div>
