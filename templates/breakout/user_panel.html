@@ -1,0 +1,56 @@
+{{ define "breakout/user_panel" }}
+<div id="breakout" class="flex flex-col gap-2 shrink-0 min-w-[300px]">
+    <div id="admin-controls" class="w-full flex justify-end" style="display: none">
+        {{ if .ShowVotes }}
+        <button class="btn bg-emerald-700 hover:bg-emerald-800 text-white" hx-post="/breakout/{{ .ID }}/reset"
+            hx-swap="none">
+            Start Voting
+        </button>
+        {{ else }}
+        <button class="btn bg-emerald-700 hover:bg-emerald-800 text-white" hx-post="/breakout/{{ .ID }}/show-votes"
+            hx-swap="none">
+            Flip Cards
+        </button>
+        {{ end }}
+    </div>
+    <div id="connected_users">
+        <div id="connected_users_head"
+            class="grid grid-cols-2 font-bold py-2 px-2.5 bg-gray-100 border border-gray-300 rounded-t-xl">
+            <div>Name</div>
+            <div class="text-right">Vote</div>
+        </div>
+        <div id="connected_users_body">
+            {{ range .Connections }}
+            <div
+                class="grid grid-cols-2 items-center py-2 px-2.5 hover:bg-slate-100 border border-gray-300 first:border-t-0 border-b-0 last:border-b last:rounded-b-xl">
+                <div class="flex items-center gap-1">
+                    {{ .DisplayName }}
+                    {{ if ne .Vote "" }}
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                        class="size-6 text-sky-500">
+                        <path fill-rule="evenodd"
+                            d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z"
+                            clip-rule="evenodd" />
+                    </svg>
+                    {{ end }}
+                </div>
+                <div class="text-right font-extrabold text-xl">
+                    {{ if $.ShowVotes }}
+                    {{ .Vote }}
+                    {{ end }}
+                </div>
+            </div>
+            {{ end }}
+        </div>
+    </div>
+    <script>
+        document.addEventListener("htmx:load", function (evt) {
+            localStorage.setItem("user_id", document.getElementById("user_id").value);
+
+            if (localStorage.getItem("user_id") === "{{ .CreatedBy }}") {
+                document.getElementById("admin-controls").style.display = "flex";
+            }
+        });
+    </script>
+</div>
+{{ end }}

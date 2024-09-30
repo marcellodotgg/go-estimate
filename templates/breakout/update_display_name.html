@@ -1,0 +1,21 @@
+{{ define "breakout/update_display_name" }}
+<section class="wrapper">
+    <header>
+        <h1>Create Display Name</h1>
+        <p class="text-muted">Let's use something so your team can identify you more easily.</p>
+    </header>
+    <form hx-patch="/breakout/{{ .Breakout.ID }}/update-display-name" hx-swap="outerHTML"
+        hx-disabled-elt="button, input">
+        <label for="display_name" class="text-sm font-semibold">Display Name</label>
+        <input id="display_name" name="display_name" type="text"
+            class="border rounded-xl px-3 py-2 -mt-1.5 outline-sky-600" autocomplete="given-name"
+            placeholder="Display Name" maxlength="15" minlength="3" autofocus required />
+        <div class="actions">
+            <button type="submit" class="btn bg-sky-700 hover:bg-sky-800 text-white">
+                <div class="htmx-placeholder">Update</div>
+                <div class="htmx-indicator">Updating...</div>
+            </button>
+        </div>
+    </form>
+</section>
+{{ end }}

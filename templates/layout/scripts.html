@@ -1,0 +1,35 @@
+{{ define "layout/scripts" }}
+<script>
+  htmx.config.scrollBehavior = "smooth";
+</script>
+
+<script>
+  document.body.addEventListener("htmx:beforeSwap", function (evt) {
+    const responseStatus = evt.detail.xhr.status;
+
+    if ([401, 404, 422].includes(responseStatus)) {
+      evt.detail.shouldSwap = true;
+      evt.detail.isError = false;
+    }
+  });
+
+  document.body.addEventListener("closeModal", function () {
+    closeModal();
+  });
+</script>
+
+<script>
+  /** Closes the current modal on the screen */
+  function closeModal() {
+    const modal = document.getElementById("modal");
+
+    modal.classList.add("closing");
+
+    modal.addEventListener("animationend", function handleAnimationEnd() {
+      modal.classList.remove("closing");
+      modal.remove();
+      modal.removeEventListener("animationend", handleAnimationEnd);
+    });
+  }
+</script>
+{{ end }}
