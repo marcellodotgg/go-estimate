@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - develop
+      - main
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -17,4 +17,4 @@ jobs:
           ssh-private-key: ${{ secrets.DO_SSH_KEY }}
       - name: Deploy to DigitalOcean
         run: |
-            ssh -o StrictHostKeyChecking=no ${{secrets.DO_USERNAME}}@${{secrets.DO_IP_ADDR}} 'cd estimate && ./deploy.sh'
+          ssh -o StrictHostKeyChecking=no ${{secrets.DO_USERNAME}}@${{secrets.DO_IP_ADDR}} 'cd estimate && ./deploy.sh'
