@@ -1,13 +1,13 @@
 {{ define "breakout/user_panel" }}
-<div id="breakout" class="flex flex-col gap-4 shrink-0 min-w-[300px]">
-    <div id="admin-controls" class="w-full flex justify-center" style="display: none">
+<div id="breakout" class="flex flex-col gap-2 shrink-0 min-w-[300px]">
+    <div id="admin-controls" class="w-full flex justify-end" style="display: none">
         {{ if .ShowVotes }}
-        <button class="btn bg-emerald-200 hover:bg-emerald-300 text-lg" hx-post="/breakout/{{ .ID }}/reset"
+        <button class="btn bg-emerald-700 hover:bg-emerald-800 text-white" hx-post="/breakout/{{ .ID }}/reset"
             hx-swap="none">
             Start Voting
         </button>
         {{ else }}
-        <button class="btn bg-emerald-200 hover:bg-emerald-300 text-lg" hx-post="/breakout/{{ .ID }}/show-votes"
+        <button class="btn bg-emerald-700 hover:bg-emerald-800 text-white" hx-post="/breakout/{{ .ID }}/show-votes"
             hx-swap="none">
             Flip Cards
         </button>

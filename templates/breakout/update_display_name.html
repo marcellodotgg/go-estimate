@@ -7,10 +7,11 @@
     <form hx-patch="/breakout/{{ .Breakout.ID }}/update-display-name" hx-swap="outerHTML"
         hx-disabled-elt="button, input">
         <label for="display_name" class="text-sm font-semibold">Display Name</label>
-        <input id="display_name" name="display_name" type="text" class="border rounded-[20px] px-3 py-2 -mt-1.5"
-            autocomplete="given-name" placeholder="Display Name" maxlength="15" minlength="3" autofocus required />
+        <input id="display_name" name="display_name" type="text"
+            class="border rounded-xl px-3 py-2 -mt-1.5 outline-sky-600" autocomplete="given-name"
+            placeholder="Display Name" maxlength="15" minlength="3" autofocus required />
         <div class="actions">
-            <button type="submit" class="btn-primary bg-sky-200 rounded-xl font-semibold px-3 py-1.5 hover:bg-sky-300">
+            <button type="submit" class="btn bg-sky-700 hover:bg-sky-800 text-white">
                 <div class="htmx-placeholder">Update</div>
                 <div class="htmx-indicator">Updating...</div>
             </button>
