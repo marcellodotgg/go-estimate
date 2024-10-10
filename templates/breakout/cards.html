@@ -1,7 +1,7 @@
 {{ define "breakout/cards" }}
 <div id="voting-cards" class="flex items-start flex-wrap gap-4 justify-center">
     {{ range .Cards }}
-    <button id="voting-{{ .Value }}"
+    <button id="voting-{{ .DisplayValue }}"
         class="text-4xl md:text-5xl font-extrabold py-4 md:py-12 w-16 md:w-28 rounded-xl bg-sky-50 hover:ring-2 ring-sky-300 hover:bg-sky-100 disabled:ring-gray-300 disabled:hover:ring-1 ring-1"
         hx-post="/breakout/{{$.ID}}/vote?display-value={{.DisplayValue}}" hx-swap="none" onclick="toggle(event)" {{ if
         $.ShowVotes }} disabled {{ end }}>
@@ -9,6 +9,33 @@
     </button>
     {{ end }}
     <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            getCurrentVote();
+        });
+
+        /** 
+         * Gets the current vote for the user. This is primarily for the situation
+         * where a user votes, but then refreshes the page. We will retain their
+         * vote for them by setting the card active.
+         */
+        async function getCurrentVote() {
+            const response = await fetch('/breakout/{{ .ID }}/my-current-vote');
+            const json = await response.json();
+
+            if (!json.vote) return;
+
+            const card = document.getElementById(`voting-${json.vote}`);
+
+            if (!card.disabled) {
+                card.classList.add('active');
+            }
+        }
+
+        /**
+         * Toggles the active class on the card that you selected. This will
+         * also remove the active class from any other card. In addition,
+         * this will remove the vote if you select the same card twice (e.g. toggle on and off)
+         */
         function toggle(evt) {
             const clickedButton = document.getElementById(evt.target.id);
 

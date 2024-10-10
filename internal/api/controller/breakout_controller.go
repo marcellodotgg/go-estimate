@@ -125,3 +125,10 @@ func (c breakoutController) UpdateDisplayName(ctx *gin.Context) {
 
 	ctx.Header("HX-Trigger", "closeModal, confirmedName")
 }
+
+func (c breakoutController) GetVoteByConnection(ctx *gin.Context) {
+	c.reset(ctx)
+	c.load(ctx)
+
+	ctx.JSON(http.StatusOK, gin.H{"vote": c.Connection.Vote})
+}
