@@ -1,5 +1,5 @@
 {{ define "breakout/cards" }}
-<div id="voting-cards" class="flex flex-wrap gap-4 items-center justify-center">
+<div id="voting-cards" class="flex items-start flex-wrap gap-4 justify-center">
     {{ range .Cards }}
     <button id="voting-{{ .Value }}"
         class="text-4xl md:text-5xl font-extrabold py-4 md:py-12 w-16 md:w-28 rounded-xl bg-sky-50 hover:ring-2 ring-sky-300 hover:bg-sky-100 disabled:ring-gray-300 disabled:hover:ring-1 ring-1"
