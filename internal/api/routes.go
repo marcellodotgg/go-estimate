@@ -52,6 +52,7 @@ func setupBreakoutRoutes() {
 		POST("vote", controller.Vote).
 		POST("reset", controller.Reset).
 		POST("show-votes", controller.ShowVotes).
+		GET("my-current-vote", controller.GetVoteByConnection).
 		GET("update-display-name", controller.UpdateDisplayNameModal).
 		PATCH("update-display-name", controller.UpdateDisplayName)
 }
