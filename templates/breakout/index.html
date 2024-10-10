@@ -17,9 +17,7 @@
         ws-connect="/ws/{{ .Breakout.ID }}?user_id={{ .UserID }}"
       >
         <div class="flex flex-col md:flex-row gap-4">
-          <div id="voting-cards" hx-swap-oob="beforeend">
-            {{ template "breakout/cards" .Breakout }}
-          </div>
+          {{ template "breakout/cards" .Breakout }}
           <div id="breakout" hx-swap-oob="beforeend"></div>
         </div>
       </div>
